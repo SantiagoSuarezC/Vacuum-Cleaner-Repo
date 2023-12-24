@@ -1,0 +1,58 @@
+Introduction
+In this exercise, we will use telingo to solve a planning problem. We have a vacuum cleaner robot that must cover the whole open surface of a room,
+represented as a grid of floor tiles, going from a starting position to a final goal position.
+
+Step 1. To describe the scenario, we will use a text file to represent the grid, using a format like the one below:
+
+r....xx.
+........
+..xxx...
+...xx..g
+
+with the following meaning
+. = empty floor cell
+r = empty floor cell, initial robot's position
+g = empty floor cell, goal position
+x = obstacle
+
+Several benchmarks are now available in file rooms.zip. In all cases, we have a unique robot position and an unique goal position. The name of the file points out the number of steps for the minimum length plan. For instance, the room above is called room026.txt because it requires at least 26 steps to be solved.
+
+Step 2. Use the python program encodeclean.py to transform any file with this input into ASP facts describing the scenario. For instance, if the example above is stored in file room026.txt, then the call
+
+    python3 encodeclean.py < room026.txt > room026.lp
+
+produces the output file room1.lp with the content
+
+cell(0,0,r).
+cell(0,5,x).
+cell(0,6,x).
+cell(2,2,x).
+cell(2,3,x).
+cell(2,4,x).
+cell(3,3,x).
+cell(3,4,x).
+cell(3,7,g).
+#const m=4.
+#const n=8.
+
+where m is the number of rows and n the number of columns in the grid.
+
+Step 3.  Encode the planning problem in telingo, writing a file cleaner.lp. The main call will look like:
+
+telingo cleaner.lp room026.lp
+
+The solutions must be expressed in terms of predicate move(D) meaning that the robot moved in some direction D={u,d,l,r} (up, down, left, right) at each time.
+
+Step 4. As an optional exercise, write a temporal formula α to force that we never visit the same empty cell twice and then write it as a &tel{...} constraint in telingo. Note: when we add this constraint, some of the scenarios will have no solution any more.
+
+Visualizer: you can use the python program showcleaner.py to display an animation of the robot moving around. It requires previously installing the python library pygame. For its use, you must first store the telingo output in a text file
+
+telingo cleaner.lp room026.lp > plan026.txt
+
+The only relevant part from plan026.txt is the sequence of move(D) actions. Then, you can call the visualizer as follows
+
+python3 showcleaner.py room026.txt plan026.txt
+
+Apart from the two text files, you can use a third argument, a number that tells the delay in milliseconds to wait before displaying the next transition.
+Assessment and Delivery
+The maximum grade for this exercise is 25 points = 25% of the course. The deadline for delivery is Friday, December 22nd, 2023 using the MOODLE assignment. Exercises can be made by groups of 2 students at most. If so, only one student is required to deliver the files in moodle, but all source files must contain the names of the two group members.
